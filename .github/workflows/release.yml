@@ -126,7 +126,14 @@ jobs:
             gh release create "$TAG" --title "$TAG" --notes-file notes.md
           fi
           gh release upload "$TAG" "$IPA" --clobber
-
+      - name: Save unsigned IPA
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WolkaraForever-unsigned-IPA
+          path: build/platform/Tolkara-unsigned.ipa
+          retention-days: 7
+          if-no-files-found: error
       - name: Keep the build log if it failed
         if: failure()
         uses: actions/upload-artifact@v4
