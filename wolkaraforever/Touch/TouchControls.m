@@ -164,6 +164,9 @@ static BOOL hardwareKeyboardAttached(void) {
     if (![self canModifyDraft]) return NO;
     NSString *text = [[[self.text componentsSeparatedByCharactersInSet:NSCharacterSet.controlCharacterSet]
         componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+    // Once a line has gone, a repeated or queued Return has nothing to send: a bare Return
+    // would open the game's chat box again. A first Return with nothing typed still is one.
+    if (!text.length && _didSubmitDraft) return NO;
     [self discardDraft];
     _didSubmitDraft = YES;
     [self.inputOwner sendChatText:text];
